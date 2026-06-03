@@ -1,0 +1,35 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download repository
+        uses: actions/checkout@v4
+
+
+      - name: Check HTML
+        run: |
+          grep "<html" index.html
+
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build image
+        run: |
+          docker build -t jullienne/lab05-site:latest .
+
+      - name: Push image
+        run: |
+          docker push jullienne/lab05-site:latest
+
